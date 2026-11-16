@@ -123,27 +123,20 @@ body {
 }
 .choice:hover { background: var(--tile); }
 
-/* Category belt: a slow right-to-left escalator. It pauses on hover, focus and touch. */
+/* Category belt: a row you slide by hand (finger, mouse drag, wheel). Left alone, it drifts slowly by itself. */
 .cats { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
 .belt {
-  overflow: hidden; padding-block: 10px;
+  overflow-x: auto; overflow-y: hidden; padding-block: 10px;
+  scrollbar-width: none; -ms-overflow-style: none; overscroll-behavior-x: contain;
+  cursor: grab; user-select: none; -webkit-user-select: none;
   -webkit-mask-image: linear-gradient(to right, transparent 0, #000 28px, #000 calc(100% - 28px), transparent 100%);
   mask-image: linear-gradient(to right, transparent 0, #000 28px, #000 calc(100% - 28px), transparent 100%);
 }
-.track { display: flex; width: max-content; animation: belt var(--dur, 30s) linear infinite; will-change: transform; }
+.belt::-webkit-scrollbar { display: none; }
+.belt.dragging { cursor: grabbing; }
+.belt.dragging .cat-btn { pointer-events: none; }
+.track { display: flex; width: max-content; }
 .grp { display: flex; flex: none; }
-.belt.paused .track { animation-play-state: paused; }
-.belt:has(.cat-btn:focus-visible) .track { animation-play-state: paused; }
-@media (hover: hover) { .belt:hover .track { animation-play-state: paused; } }
-@keyframes belt {
-  from { transform: translateX(0); }
-  to { transform: translateX(var(--shift, -50%)); }
-}
-@media (prefers-reduced-motion: reduce) {
-  .track { animation: none; }
-  .dup { display: none; }
-  .belt { overflow-x: auto; -webkit-mask-image: none; mask-image: none; }
-}
 .cat-btn {
   display: inline-flex; align-items: center; gap: 8px; flex: none;
   min-height: 38px; padding: 0 14px; margin: 0 8px 0 0;
@@ -155,6 +148,20 @@ body {
 .cat-btn .n { font-size: 0.74rem; font-variant-numeric: tabular-nums; opacity: 0.75; }
 .cat-btn:hover { color: var(--ink); border-color: var(--ink); }
 .cat-btn[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: var(--bg); }
+
+/* Subcategories: a smaller row under the belt, shown only for a category that has them. */
+.subs { padding-block: 0 12px; }
+.sub-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.sub-btn {
+  display: inline-flex; align-items: center; gap: 7px;
+  min-height: 36px; padding: 0 14px;
+  font: 500 0.84rem/1 var(--font-body); white-space: nowrap;
+  color: var(--muted); background: none;
+  border: 1px solid var(--line); border-radius: 999px; cursor: pointer;
+}
+.sub-btn .n { font-size: 0.72rem; font-variant-numeric: tabular-nums; opacity: 0.75; }
+.sub-btn:hover { color: var(--ink); border-color: var(--ink); }
+.sub-btn[aria-pressed="true"] { color: var(--ink); background: var(--tile); border-color: var(--ink); }
 
 /* Editing toolbar (only for people who can edit) */
 .admin { background: var(--tile); border-bottom: 1px solid var(--line); }
@@ -306,6 +313,11 @@ h1 { margin: 0; }
 .cat-row { display: grid; gap: 8px; margin-bottom: 10px; padding: 12px; border: 1px solid var(--line); border-radius: 12px; }
 .cat-row-top { display: flex; gap: 8px; align-items: center; }
 .cat-row-top input { flex: 1; }
+.sub-edit { display: grid; gap: 8px; padding-top: 4px; }
+.sub-title { margin: 4px 0 0; font: 600 0.8rem/1.2 var(--font-body); }
+.sub-line { display: flex; gap: 8px; align-items: center; }
+.sub-line input { flex: 1; }
+.sub-edit .btn { justify-self: start; }
 .num-row { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
 .num-row input { flex: 1; }
 
@@ -336,7 +348,7 @@ h1 { margin: 0; }
 <body>
 <div id="root"></div>
 <noscript><main style="max-width:720px;margin:0 auto;padding:24px 16px;font:16px/1.5 sans-serif"><h1>Mariposa</h1><p>Tulipán #306, entre Falgueras y Vista Hermosa, Cerro, La Habana</p><p>WhatsApp: +5356353012 · +5356356603</p></main></noscript>
-<script type="application/json" id="catalog-data">{"store":{"name":"Mariposa","place":"La Habana","whatsapp":["56353012","56356603"],"address":"Tulipán #306, entre Falgueras y Vista Hermosa, Cerro, La Habana","hours":"","mapUrl":"https://maps.app.goo.gl/kRepnH4Dr7eLmMY48","currency":"$","updated":"15 nov 2026","about":"","siteUrl":"","gverify":""},"categories":[{"id":"cocina","name":"Cocina y vajilla","tint":"cocina","phrase":"Todo para poner la mesa y cocinar con gusto."},{"id":"hogar","name":"Hogar","tint":"hogar","phrase":"Pequeños detalles que hacen tu casa más cómoda."},{"id":"ferreteria","name":"Ferretería","tint":"ferreteria","phrase":"Herramientas y piezas para resolver cualquier arreglo."}],"products":[]}</script>
+<script type="application/json" id="catalog-data">{"store":{"name":"Mariposa","place":"La Habana","whatsapp":["56353012","56356603"],"address":"Tulipán #306, entre Falgueras y Vista Hermosa, Cerro, La Habana","hours":"","mapUrl":"https://maps.app.goo.gl/kRepnH4Dr7eLmMY48","currency":"$","updated":"15 nov 2026","about":"","siteUrl":"","gverify":""},"categories":[{"id":"cocina","name":"Cocina y vajilla","tint":"cocina","phrase":"Todo para poner la mesa y cocinar con gusto.","subs":[]},{"id":"hogar","name":"Hogar","tint":"hogar","phrase":"Pequeños detalles que hacen tu casa más cómoda.","subs":[]},{"id":"ferreteria","name":"Ferretería","tint":"ferreteria","phrase":"Herramientas y piezas para resolver cualquier arreglo.","subs":[]}],"products":[]}</script>
 <script id="app-js">
 (function () {
   "use strict";
@@ -401,6 +413,9 @@ h1 { margin: 0; }
 
 <nav class="cats" aria-label="Categorías">
   <div class="belt" id="belt"><div class="track" id="chips" role="group" aria-label="Categorías"></div></div>
+  <div class="subs" id="subs" hidden>
+    <div class="wrap"><div class="sub-chips" id="subChips" role="group" aria-label="Subcategorías"></div></div>
+  </div>
 </nav>
 
 <div class="admin" id="admin" hidden>
@@ -493,12 +508,32 @@ h1 { margin: 0; }
       desc: str(p.desc)
     };
     if (p.img) o.img = str(p.img);
+    if (p.sub) o.sub = str(p.sub);
     if (p.example) o.example = true;
     return o;
+  }
+  function normCats(list) {
+    return arr(list).map(function (c) {
+      return {
+        id: str(c.id), name: str(c.name), tint: str(c.tint) || "otros", phrase: str(c.phrase),
+        subs: arr(c.subs).map(function (s) { return { id: str(s.id), name: str(s.name) }; }).filter(function (s) { return s.id && s.name; })
+      };
+    }).filter(function (c) { return c.id; });
+  }
+  function normProducts(list, cats) {
+    var prods = arr(list).map(makeProduct).filter(function (p) { return p.id; });
+    // A product keeps its subcategory only while that subcategory still exists in its category.
+    prods.forEach(function (p) {
+      if (!p.sub) return;
+      var c = cats.filter(function (x) { return x.id === p.cat; })[0];
+      if (!c || !c.subs.some(function (s) { return s.id === p.sub; })) delete p.sub;
+    });
+    return prods;
   }
   function normalize(d) {
     d = d || {};
     var s = d.store || {};
+    var cats = normCats(d.categories);
     return {
       store: {
         name: str(s.name) || "Mi tienda",
@@ -513,10 +548,8 @@ h1 { margin: 0; }
         siteUrl: str(s.siteUrl),
         gverify: str(s.gverify)
       },
-      categories: arr(d.categories).map(function (c) {
-        return { id: str(c.id), name: str(c.name), tint: str(c.tint) || "otros", phrase: str(c.phrase) };
-      }).filter(function (c) { return c.id; }),
-      products: arr(d.products).map(makeProduct).filter(function (p) { return p.id; })
+      categories: cats,
+      products: normProducts(d.products, cats)
     };
   }
 
@@ -525,7 +558,7 @@ h1 { margin: 0; }
   try { pub = normalize(JSON.parse($("catalog-data").textContent)); } catch (e) { pub = normalize({}); }
   var pubJson = JSON.stringify(pub);
   var draft = clone(pub);
-  var view = { cat: "all", q: "" };
+  var view = { cat: "all", sub: "all", q: "" };
   var canEdit = false;
   var editing = false;
   var saving = false;
@@ -678,15 +711,50 @@ h1 { margin: 0; }
     $("sub").hidden = !phrase;
   }
 
+  function syncSubs() {
+    var btns = $("subChips").querySelectorAll(".sub-btn");
+    for (var i = 0; i < btns.length; i++) {
+      btns[i].setAttribute("aria-pressed", String(btns[i].getAttribute("data-id") === view.sub));
+    }
+  }
+
+  // The row of subcategories under the belt: only for a category that has some.
+  function renderSubs() {
+    var chips = $("subChips");
+    chips.textContent = "";
+    var c = view.cat === "all" ? null : draft.categories.filter(function (x) { return x.id === view.cat; })[0];
+    var subs = c ? c.subs : [];
+    if (view.sub !== "all" && !subs.some(function (s) { return s.id === view.sub; })) view.sub = "all";
+    $("subs").hidden = !subs.length;
+    if (!subs.length) return;
+    [{ id: "all", name: "Todo" }].concat(subs).forEach(function (s) {
+      var n = draft.products.filter(function (p) { return p.cat === c.id && (s.id === "all" || p.sub === s.id); }).length;
+      var b = el("button", "sub-btn");
+      b.type = "button";
+      b.setAttribute("data-id", s.id);
+      b.appendChild(document.createTextNode(s.name));
+      b.appendChild(el("span", "n", String(n)));
+      b.addEventListener("click", function () {
+        view.sub = s.id;
+        syncSubs();
+        renderGrid();
+      });
+      chips.appendChild(b);
+    });
+    syncSubs();
+  }
+
   function selectCat(id) {
     view.cat = id;
+    view.sub = "all";
     syncChips();
+    renderSubs();
     renderPhrase();
     renderGrid();
   }
 
-  // The category row is a slow belt. The set of categories repeats until it fills the screen,
-  // and the track slides by exactly one set, so the loop has no seam.
+  // The category row is a belt you can slide by hand. The set of categories repeats until it fills the screen
+  // (plus one set on each side), so it can be dragged either way, and the drift below loops with no seam.
   function renderChips() {
     var belt = $("belt");
     var track = $("chips");
@@ -714,12 +782,13 @@ h1 { margin: 0; }
     track.appendChild(makeGroup(true));
     var gw = track.firstChild.getBoundingClientRect().width;
     beltWidth = belt.clientWidth;
-    if (gw > 0) {
-      var copies = Math.max(2, Math.ceil(beltWidth / gw) + 1);
+    drift.gw = 0;
+    if (gw > 0 && !beltMotion.matches) {
+      var copies = Math.ceil(beltWidth / gw) + 2;
       for (var i = 1; i < copies; i++) track.appendChild(makeGroup(false));
-      track.style.setProperty("--shift", "-" + gw + "px");
-      track.style.setProperty("--dur", (gw / 36).toFixed(2) + "s");
+      drift.gw = gw;
     }
+    setBeltPos(drift.gw);   // start on the middle copy so there is room to slide to the left too
     syncChips();
   }
 
@@ -778,6 +847,7 @@ h1 { margin: 0; }
     var q = fold(view.q.trim());
     var list = draft.products.filter(function (p) {
       if (view.cat !== "all" && p.cat !== view.cat) return false;
+      if (view.cat !== "all" && view.sub !== "all" && p.sub !== view.sub) return false;
       if (!q) return true;
       return fold(p.name + " " + p.desc + " " + p.code).indexOf(q) !== -1;
     });
@@ -792,7 +862,9 @@ h1 { margin: 0; }
           ? "Aún no hay productos. Toca “Editar” y luego “Agregar producto” para empezar."
           : "Pronto agregaremos productos aquí.";
       } else {
-        none.textContent = "No encontramos productos con esa búsqueda. Prueba con otra palabra o quita el filtro de categoría.";
+        none.textContent = q
+          ? "No encontramos productos con esa búsqueda. Prueba con otra palabra o quita el filtro de categoría."
+          : "Todavía no hay productos en esta sección.";
       }
     } else {
       none.hidden = true;
@@ -821,6 +893,7 @@ h1 { margin: 0; }
   function renderAll() {
     renderHeader();
     renderChips();
+    renderSubs();
     renderPhrase();
     renderGrid();
     renderAdmin();
@@ -1020,7 +1093,7 @@ h1 { margin: 0; }
     }
     var isNew = !p;
     var inView = draft.categories.some(function (c) { return c.id === view.cat; });
-    var cur = p ? clone(p) : { id: newId("p"), code: "", cat: inView ? view.cat : draft.categories[0].id, name: "", price: "", available: true, desc: "" };
+    var cur = p ? clone(p) : { id: newId("p"), code: "", cat: inView ? view.cat : draft.categories[0].id, name: "", price: "", available: true, desc: "", sub: inView && view.sub !== "all" ? view.sub : "" };
     var photoId = cur.img || "";
     var uploading = false;
 
@@ -1040,6 +1113,30 @@ h1 { margin: 0; }
     catSel.value = cur.cat;
     if (catSel.selectedIndex < 0) catSel.selectedIndex = 0;
     form.appendChild(field("Categoría", catSel));
+
+    // Subcategory: only offered when the chosen category has some.
+    var subSel = el("select");
+    var fSub = field("Subcategoría (opcional)", subSel);
+    form.appendChild(fSub);
+    var wantSub = cur.sub || "";
+    function fillSubs() {
+      var c = draft.categories.filter(function (x) { return x.id === catSel.value; })[0];
+      var subs = c ? c.subs : [];
+      subSel.textContent = "";
+      var none = el("option", null, "Ninguna");
+      none.value = "";
+      subSel.appendChild(none);
+      subs.forEach(function (s) {
+        var o = el("option", null, s.name);
+        o.value = s.id;
+        subSel.appendChild(o);
+      });
+      subSel.value = subs.some(function (s) { return s.id === wantSub; }) ? wantSub : "";
+      fSub.hidden = !subs.length;
+    }
+    catSel.addEventListener("change", function () { wantSub = ""; fillSubs(); });
+    subSel.addEventListener("change", function () { wantSub = subSel.value; });
+    fillSubs();
 
     var priceIn = input("text", isNew ? "" : String(cur.price), 10);
     priceIn.inputMode = "decimal";
@@ -1167,6 +1264,7 @@ h1 { margin: 0; }
         desc: descIn.value.trim()
       };
       if (photoId) obj.img = photoId;
+      if (subSel.value) obj.sub = subSel.value;
       var i = -1;
       draft.products.forEach(function (x, k) { if (x.id === cur.id) i = k; });
       if (i >= 0) draft.products[i] = obj; else draft.products.unshift(obj);
@@ -1179,10 +1277,12 @@ h1 { margin: 0; }
 
   /* ------------------------ categories form ------------------------ */
   function openCategoriesForm() {
-    var rows = draft.categories.map(function (c) { return { id: c.id, name: c.name, phrase: c.phrase, tint: c.tint }; });
+    var rows = draft.categories.map(function (c) {
+      return { id: c.id, name: c.name, phrase: c.phrase, tint: c.tint, subs: c.subs.map(function (s) { return { id: s.id, name: s.name }; }) };
+    });
     var form = el("form");
     form.noValidate = true;
-    form.appendChild(el("p", "hint", "Cada categoría puede tener una frase que aparece arriba de sus productos. El orden de aquí es el orden de la cinta."));
+    form.appendChild(el("p", "hint", "Cada categoría puede tener una frase que aparece arriba de sus productos y subcategorías (por ejemplo, en Hogar: Sala, Cocina y Baño). El orden de aquí es el orden de la cinta."));
     var list = el("div");
     list.style.marginTop = "14px";
     form.appendChild(list);
@@ -1236,6 +1336,35 @@ h1 { margin: 0; }
         phr.addEventListener("input", function () { r.phrase = phr.value; });
         box.appendChild(top);
         box.appendChild(phr);
+
+        var subBox = el("div", "sub-edit");
+        subBox.appendChild(el("p", "sub-title", "Subcategorías (opcional)"));
+        r.subs.forEach(function (s, j) {
+          var line = el("div", "sub-line");
+          var si = el("input");
+          si.type = "text";
+          si.maxLength = 30;
+          si.value = s.name;
+          si.placeholder = "Ejemplo: Sala";
+          si.setAttribute("aria-label", "Subcategoría " + (j + 1) + " de " + (r.name || "la categoría"));
+          si.setAttribute("data-focus", "sub-" + i + "-" + j);
+          si.addEventListener("input", function () { s.name = si.value; });
+          var sd = iconBtn("✕", "Borrar la subcategoría " + (s.name || (j + 1)));
+          sd.addEventListener("click", function () { r.subs.splice(j, 1); focusKey = "subadd-" + i; draw(); });
+          line.appendChild(si);
+          line.appendChild(sd);
+          subBox.appendChild(line);
+        });
+        var addSub = el("button", "btn btn-sm", "Agregar subcategoría");
+        addSub.type = "button";
+        addSub.setAttribute("data-focus", "subadd-" + i);
+        addSub.addEventListener("click", function () {
+          r.subs.push({ id: "", name: "" });
+          focusKey = "sub-" + i + "-" + (r.subs.length - 1);
+          draw();
+        });
+        subBox.appendChild(addSub);
+        box.appendChild(subBox);
         if (n) box.appendChild(el("p", "hint", "Tiene " + n + (n === 1 ? " producto" : " productos") + ". Para borrar la categoría, primero pásalos a otra."));
         list.appendChild(box);
       });
@@ -1251,7 +1380,7 @@ h1 { margin: 0; }
     var add = el("button", "btn btn-sm", "Agregar categoría");
     add.type = "button";
     add.addEventListener("click", function () {
-      rows.push({ id: "", name: "", phrase: "", tint: "" });
+      rows.push({ id: "", name: "", phrase: "", tint: "", subs: [] });
       draw();
       var last = list.querySelector('[data-focus="name-' + (rows.length - 1) + '"]');
       if (last) last.focus();
@@ -1279,6 +1408,16 @@ h1 { margin: 0; }
         if (seen[key]) { msg.textContent = "Hay dos categorías con el mismo nombre."; msg.hidden = false; return; }
         seen[key] = true;
       }
+      for (var k = 0; k < rows.length; k++) {
+        var seenSub = {};
+        for (var j = 0; j < rows[k].subs.length; j++) {
+          var sn = rows[k].subs[j].name.trim();
+          var where = rows[k].name.trim();
+          if (!sn) { msg.textContent = "Escribe el nombre de todas las subcategorías de " + where + ", o bórralas."; msg.hidden = false; return; }
+          if (seenSub[fold(sn)]) { msg.textContent = "En " + where + " hay dos subcategorías con el mismo nombre."; msg.hidden = false; return; }
+          seenSub[fold(sn)] = true;
+        }
+      }
       var usedIds = {};
       rows.forEach(function (r) { if (r.id) usedIds[r.id] = true; });
       var usedTints = {};
@@ -1295,9 +1434,25 @@ h1 { margin: 0; }
           tint = TINTS.filter(function (t) { return !usedTints[t]; })[0] || TINTS[idx % TINTS.length];
           usedTints[tint] = true;
         }
-        return { id: id, name: r.name.trim(), tint: tint, phrase: r.phrase.trim() };
+        var usedSub = {};
+        r.subs.forEach(function (s) { if (s.id) usedSub[s.id] = true; });
+        var subs = r.subs.map(function (s) {
+          var sid = s.id;
+          if (!sid) {
+            sid = slug(s.name);
+            while (usedSub[sid]) sid = slug(s.name) + "-" + Math.random().toString(36).slice(2, 5);
+            usedSub[sid] = true;
+          }
+          return { id: sid, name: s.name.trim() };
+        });
+        return { id: id, name: r.name.trim(), tint: tint, phrase: r.phrase.trim(), subs: subs };
       });
       draft.categories = out;
+      // A product whose subcategory was deleted stays in its category, without a subcategory.
+      draft.products.forEach(function (p) {
+        var c = out.filter(function (x) { return x.id === p.cat; })[0];
+        if (p.sub && (!c || !c.subs.some(function (s) { return s.id === p.sub; }))) delete p.sub;
+      });
       closeModal();
       afterChange("Categorías actualizadas. Falta guardar los cambios.");
     });
@@ -1841,18 +1996,87 @@ h1 { margin: 0; }
     renderGrid();
   });
 
+  /* ---- category belt: slide it by hand; left alone it drifts by itself (about 36 px per second) ---- */
   var beltEl = $("belt");
-  var resumeTimer;
-  function resume() {
-    clearTimeout(resumeTimer);
-    resumeTimer = setTimeout(function () { beltEl.classList.remove("paused"); }, 2500);
+  var beltMotion = window.matchMedia ? window.matchMedia("(prefers-reduced-motion: reduce)") : { matches: false };
+  var drift = {
+    gw: 0,          // width of one set of categories; the content repeats every gw pixels
+    pos: 0,         // where the drift is (kept as a decimal, the browser rounds scrollLeft)
+    expect: 0,      // the last position we set ourselves, to tell our own scrolling from the person's
+    moving: false, last: 0,
+    touched: -10000, // when the person last touched it: it drifts again 2.5 s after that
+    down: false, hover: false, focus: false, drag: null, dragged: false
+  };
+  function setBeltPos(x) {
+    drift.pos = x;
+    drift.expect = x;
+    drift.moving = false;
+    beltEl.scrollLeft = x;
   }
-  beltEl.addEventListener("pointerdown", function () {
-    clearTimeout(resumeTimer);
-    beltEl.classList.add("paused");
+  function touchBelt() { drift.touched = performance.now(); }
+  function driftTick(t) {
+    var dt = drift.last ? Math.min(t - drift.last, 64) : 16;
+    drift.last = t;
+    var calm = !drift.down && !drift.hover && !drift.focus && drift.gw > 0 && !beltMotion.matches && (t - drift.touched) > 2500;
+    if (calm) {
+      if (!drift.moving) {
+        // Start from wherever the person left it, folded back into the middle copy (the content is identical there).
+        var g = drift.gw;
+        drift.pos = g + ((((beltEl.scrollLeft - g) % g) + g) % g);
+        drift.moving = true;
+      }
+      drift.pos += dt * 0.036;
+      if (drift.pos >= drift.gw * 2) drift.pos -= drift.gw;
+      drift.expect = drift.pos;
+      beltEl.scrollLeft = drift.pos;
+    } else {
+      drift.moving = false;
+    }
+    requestAnimationFrame(driftTick);
+  }
+  beltEl.addEventListener("scroll", function () {
+    if (Math.abs(beltEl.scrollLeft - drift.expect) <= 1.5) return;   // that was us
+    drift.moving = false;
+    touchBelt();
+  }, { passive: true });
+  beltEl.addEventListener("wheel", function (e) { if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) touchBelt(); }, { passive: true });
+  beltEl.addEventListener("pointerdown", function (e) {
+    drift.down = true;
+    touchBelt();
+    // Touch screens slide natively; with a mouse, dragging is done here.
+    if (e.pointerType === "mouse" && e.button === 0) { drift.drag = { x: e.clientX, left: beltEl.scrollLeft }; drift.dragged = false; }
   });
-  beltEl.addEventListener("pointerup", resume);
-  beltEl.addEventListener("pointercancel", resume);
+  window.addEventListener("pointermove", function (e) {
+    var d = drift.drag;
+    if (!d) return;
+    if (e.buttons === 0) { endPointer(); return; }
+    var dx = e.clientX - d.x;
+    if (!drift.dragged && Math.abs(dx) > 4) { drift.dragged = true; beltEl.classList.add("dragging"); }
+    if (drift.dragged) { beltEl.scrollLeft = d.left - dx; touchBelt(); }
+  });
+  function endPointer() {
+    if (!drift.down && !drift.drag) return;
+    drift.down = false;
+    drift.drag = null;
+    touchBelt();
+    if (drift.dragged) {
+      beltEl.classList.remove("dragging");
+      setTimeout(function () { drift.dragged = false; }, 0);   // after the click that follows a drag
+    }
+  }
+  window.addEventListener("pointerup", endPointer);
+  window.addEventListener("pointercancel", endPointer);
+  // A drag with the mouse must not also select the category it ended on.
+  beltEl.addEventListener("click", function (e) { if (drift.dragged) { e.stopPropagation(); e.preventDefault(); } }, true);
+  // With a mouse, hovering pauses it so a category is easy to click. A touch never leaves it paused.
+  beltEl.addEventListener("pointerenter", function (e) { if (e.pointerType === "mouse") drift.hover = true; });
+  beltEl.addEventListener("pointerleave", function () { drift.hover = false; touchBelt(); });
+  beltEl.addEventListener("focusin", function (e) {
+    var fv = true;
+    try { fv = e.target.matches(":focus-visible"); } catch (x) {}
+    if (fv) { drift.focus = true; touchBelt(); }
+  });
+  beltEl.addEventListener("focusout", function () { drift.focus = false; touchBelt(); });
 
   var resizeTimer;
   window.addEventListener("resize", function () {
@@ -1865,6 +2089,7 @@ h1 { margin: 0; }
   /* ------------------------------- start ------------------------------- */
   renderAll();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(renderChips);
+  if (window.requestAnimationFrame) requestAnimationFrame(driftTick);
 
   // A copy saved a moment ago: it is either what we just loaded (the save worked) or lost to a conflict.
   var stashRaw = ssGet(K_STASH);
