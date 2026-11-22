@@ -1,0 +1,201 @@
+/* =====================================================================
+   MARIPOSA · VENTAS
+   Pantalla de venta pensada para el teléfono del trabajador: 360 px de ancho,
+   una mano, dedos grandes (todo lo que se toca mide al menos 44 px).
+   Se apoya en css/panel.css (colores, botones, pestañas, ventana, avisos).
+   ===================================================================== */
+
+/* La barra de arriba se va con el desplazamiento; lo que queda fijo es la búsqueda. */
+.topbar { position: static; }
+.topbar .btn-sm { min-height: 44px; }
+.toast { bottom: calc(92px + env(safe-area-inset-bottom, 0px)); }
+
+.vwrap {
+  width: 100%; max-width: 760px; margin-left: auto; margin-right: auto;
+  padding-left: max(var(--gutter), env(safe-area-inset-left, 0px));
+  padding-right: max(var(--gutter), env(safe-area-inset-right, 0px));
+}
+.tabs-bar { background: var(--bg); }
+.tabs-bar .tabs { border-bottom: 0; }
+.tabs-bar .tab { flex: 1 1 0; }
+.tabs-bar { border-bottom: 1px solid var(--line); }
+
+.vmain { min-height: 50vh; }
+.vmain.has-bar { padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px)); }
+.link-btn { margin-left: auto; }
+
+/* ---------- Búsqueda y categorías (quedan fijas al bajar por la lista) ---------- */
+.vbar {
+  position: sticky; top: 0; z-index: 12; display: flex; align-items: center; gap: 8px;
+  height: 62px; padding: 9px 0 5px; background: var(--bg);
+}
+.vbar .search { flex: 1 1 auto; min-width: 0; }
+.cats {
+  position: sticky; top: 62px; z-index: 11; display: flex; align-items: center; gap: 8px;
+  height: 52px; padding: 4px 0 10px; background: var(--bg); border-bottom: 1px solid var(--line);
+  overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch;
+}
+.cats::-webkit-scrollbar { display: none; }
+.cats .chip { flex: none; min-height: 40px; }
+.vcount { margin: 10px 0 0; font-size: 0.8rem; }
+.vstate { min-height: 1px; }
+.vstate .btn { margin: 0 0 40px; }
+
+/* ---------- Lista de productos ---------- */
+.plist { list-style: none; margin: 0; padding: 0; }
+.prow { position: relative; display: flex; align-items: center; gap: 4px; border-bottom: 1px solid var(--line); }
+.prow.in { background: var(--accent-soft); border-bottom-color: transparent; border-radius: 12px; padding-left: 10px; margin-top: 2px; }
+.prod {
+  flex: 1 1 auto; min-width: 0; display: flex; align-items: center; gap: 12px; min-height: 68px;
+  padding: 12px 6px 12px 0; text-align: left; cursor: pointer; background: none; border: 0; border-radius: 10px;
+}
+.prow:not(.in) .prod:hover { background: var(--surface); }
+.prod:active { background: var(--accent-soft); }
+.prod-qty {
+  flex: none; display: inline-grid; place-items: center; min-width: 30px; height: 30px; padding: 0 8px;
+  border-radius: 999px; background: var(--accent); color: var(--accent-ink); font: 700 0.9rem/1 var(--font-body);
+}
+.prod-body { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
+.prod-top { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+.prod-name { font: 600 0.95rem/1.3 var(--font-body); min-width: 0; overflow-wrap: anywhere; }
+.prod-price { flex: none; font: 600 0.95rem/1.3 var(--font-body); color: var(--accent-strong); }
+.prod-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; }
+.pill {
+  display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 999px;
+  font: 600 0.76rem/1.3 var(--font-body); background: var(--ok-bg); color: var(--ok);
+}
+.pill-store.low { background: var(--warn-bg); color: var(--warn); }
+.pill-store.none { background: var(--bad-bg); color: var(--bad); }
+.pill-wh {
+  display: inline-flex; align-items: center; padding: 2px 9px; border-radius: 999px;
+  font: 500 0.76rem/1.3 var(--font-body); color: var(--muted); background: var(--surface); border: 1px solid var(--line);
+}
+.prod-code { font: 500 0.72rem/1.3 var(--font-body); letter-spacing: 0.06em; color: var(--muted); }
+.prod-warn { font-size: 0.76rem; line-height: 1.3; color: var(--bad); }
+.prow.nostock .prod-name { color: var(--muted); }
+.minus {
+  flex: none; display: inline-grid; place-items: center; width: 46px; height: 46px; margin-right: 6px;
+  font: 500 1.5rem/1 var(--font-body); color: var(--ink); cursor: pointer;
+  background: var(--bg); border: 1px solid var(--line); border-radius: 12px;
+}
+.minus:hover { border-color: var(--accent); }
+
+/* ---------- Barra de cobro (abajo, siempre a la mano) ---------- */
+.cartbar {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 30; background: var(--bg);
+  border-top: 1px solid var(--line); box-shadow: 0 -6px 20px rgba(20, 24, 28, 0.09);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+.cartbar-in { display: flex; align-items: center; gap: 14px; padding-top: 10px; padding-bottom: 10px; }
+.cartbar-text { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.cartbar-count { font-size: 0.78rem; color: var(--muted); }
+.cartbar-total { font: 700 1.35rem/1.1 var(--font-body); }
+.btn-cobrar { min-height: 52px; padding: 0 28px; font-size: 1rem; font-weight: 600; }
+
+/* ---------- Hoja de cobro (sube desde abajo) ---------- */
+.sheet { position: fixed; top: 0; right: 0; bottom: 0; left: 0; z-index: 60; display: flex; align-items: flex-end; justify-content: center; }
+.sheet-scrim { position: absolute; top: 0; right: 0; bottom: 0; left: 0; background: rgba(15, 22, 28, 0.5); }
+.sheet-card {
+  position: relative; width: min(560px, 100%); max-height: 94vh; max-height: 94dvh; overflow-y: auto; overscroll-behavior: contain;
+  padding: 16px 16px calc(18px + env(safe-area-inset-bottom, 0px)); background: var(--bg);
+  border-radius: 18px 18px 0 0; box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.25);
+  animation: sheet-up 0.22s ease-out;
+}
+@keyframes sheet-up { from { transform: translateY(24px); opacity: 0.6; } to { transform: none; opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .sheet-card { animation: none; } }
+@media (min-width: 700px) {
+  .sheet { align-items: center; padding: 16px; }
+  .sheet-card { border-radius: 16px; max-height: calc(100dvh - 32px); }
+}
+
+.lines { border-top: 1px solid var(--line); }
+.line { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; padding: 10px 0; border-bottom: 1px solid var(--line); }
+.line-info { flex: 1 1 150px; min-width: 0; }
+.line-name { font: 600 0.92rem/1.3 var(--font-body); overflow-wrap: anywhere; }
+.line-sub { margin-top: 2px; font-size: 0.82rem; color: var(--muted); }
+.line-warn { margin-top: 2px; font-size: 0.8rem; font-weight: 600; color: var(--warn); }
+.step { flex: none; display: flex; align-items: center; gap: 4px; margin-left: auto; }
+.step .icon-btn { font-size: 1.25rem; }
+.step-qty { min-width: 34px; text-align: center; font: 700 1.05rem/1 var(--font-body); }
+
+.callout { margin: 12px 0 0; padding: 10px 12px; border-radius: 8px; background: var(--warn-bg); color: var(--warn); font-size: 0.84rem; line-height: 1.45; }
+.total-row { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin: 0 0 16px; padding: 14px 0 12px; }
+.total-label { font: 600 0.72rem/1 var(--font-body); letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+.total-val { font: 700 1.9rem/1 var(--font-body); }
+
+.pays { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.pay {
+  min-height: 58px; padding: 6px 8px; cursor: pointer; text-align: center; line-height: 1.2;
+  font: 600 0.84rem/1.2 var(--font-body); color: var(--ink); background: var(--bg);
+  border: 1px solid var(--line); border-radius: 12px;
+}
+.pay:hover { border-color: var(--accent); }
+.pay.on { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+@media (max-width: 340px) { .pays { grid-template-columns: 1fr; } .pay { min-height: 48px; } }
+
+.actions-col { flex-direction: column; flex-wrap: nowrap; gap: 8px; margin-top: 8px; }
+/* Laptop: «Registrar venta» queda siempre a la vista al pie de la ventana de cobro, aunque haya que bajar para ver todo el formulario */
+@media (min-width: 700px) {
+  .sheet-card .actions-col { position: sticky; bottom: -18px; z-index: 2; flex-direction: row; margin: 10px -16px 0; padding: 12px 16px 18px; background: var(--bg); border-top: 1px solid var(--line); }
+  .sheet-card .actions-col .btn-block { width: auto; flex: 1 1 0; }
+  .sheet-card .actions-col .btn-cobrar { flex: 2 1 0; }
+}
+.btn-gap { margin-top: 10px; }
+
+/* ---------- Hoy ---------- */
+.hoy-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-top: 14px; }
+.hoy-title { margin: 0; font: 700 2rem/1.1 var(--font-display); }
+.paycard { padding: 14px 16px 6px; margin-bottom: 22px; }
+.paycard .section-title { margin-bottom: 4px; }
+.payrow { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding: 11px 0; border-top: 1px solid var(--line); font-weight: 500; }
+.payrow .num { font-weight: 700; }
+.payrow.zero { color: var(--muted); }
+.payrow.zero .num { font-weight: 500; }
+.paycard .hint { padding: 8px 0 10px; }
+.list-title { margin-top: 4px; }
+.salelist { list-style: none; margin: 0 0 40px; padding: 0; }
+.sale { margin: 0 0 10px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 14px; background: var(--bg); }
+.sale.problem { border-color: var(--bad); background: var(--bad-bg); }
+.sale.void { background: var(--surface); }
+.sale.void .sale-total, .sale.void .sale-items { text-decoration: line-through; color: var(--muted); }
+.sale-head { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 10px; }
+.sale-time { font: 600 0.88rem/1 var(--font-body); color: var(--muted); }
+.sale-badges { display: inline-flex; flex-wrap: wrap; gap: 4px; }
+.sale-total { margin-left: auto; font: 700 1.05rem/1 var(--font-body); }
+.sale-items { margin: 8px 0 0; font-size: 0.88rem; line-height: 1.45; overflow-wrap: anywhere; }
+.sale-pay { margin: 4px 0 0; font-size: 0.8rem; }
+.sale .err { margin-top: 6px; }
+.sale-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; margin-top: 10px; }
+.sale-actions .btn { min-height: 44px; }
+
+@media (min-width: 900px) {
+  .vwrap { max-width: 1120px; }
+  .plist { display: grid; grid-template-columns: 1fr 1fr; column-gap: 32px; }
+  .salelist { display: grid; grid-template-columns: 1fr 1fr; column-gap: 14px; align-items: start; }
+  .tabs-bar .tab { flex: none; }
+  .cartbar-in { justify-content: flex-end; }
+  .cartbar-text { flex: none; align-items: flex-end; margin-right: 6px; }
+}
+
+/* Cobro con pagos mixtos: una fila por forma de pago */
+.pm-rows { display: grid; gap: 10px; margin-top: 8px; }
+.pm-row { display: grid; gap: 4px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--bg); }
+.pm-label { font: 600 0.88rem/1.2 var(--font-body); }
+.pm-line { display: grid; grid-template-columns: 1fr auto auto; align-items: center; gap: 8px; }
+.pm-line input { min-height: 46px; font-size: 1.1rem; font-variant-numeric: tabular-nums; }
+.pm-unit { color: var(--muted); font-weight: 600; font-size: 0.86rem; min-width: 2.4em; }
+.pm-fill { min-height: 46px; min-width: 56px; }
+.pm-row:focus-within { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+.paystat { margin: 10px 0 0; padding: 10px 12px; border-radius: 10px; background: var(--surface-2, #f1f2ef); font-weight: 600; font-size: 0.92rem; font-variant-numeric: tabular-nums; }
+.paystat.ok { background: #e3f3e6; color: #1f6b34; }
+.paystat.warn { background: #fff0d6; color: #8a5a00; }
+.paystat.info { background: #e6eef8; color: #24517f; }
+.btn-cierre { margin: 6px 0 14px; }
+
+/* Cambio con crédito, devoluciones en las ventas */
+.swap-box { background: #e6eef8; color: #24517f; margin: 10px 0 0; }
+.swap-box .link-btn { margin-left: 0; color: inherit; min-height: 32px; }
+.total-sub { margin: 0; padding: 0 0 8px; }
+.total-sub .total-val { font-size: 1.1rem; font-weight: 600; }
+.sale-note { margin: 4px 0 0; font-size: 0.8rem; overflow-wrap: anywhere; }
+.sale-ret { margin: 6px 0 0; padding: 6px 8px; border-radius: 8px; background: #fff0d6; color: #7a4f00; font-size: 0.8rem; line-height: 1.4; overflow-wrap: anywhere; }

@@ -1,0 +1,91 @@
+/* Cierre del día: pantalla completa en el teléfono, hoja limpia al imprimir */
+.cz-overlay {
+  position: fixed; inset: 0; z-index: 90; overflow-y: auto; -webkit-overflow-scrolling: touch;
+  background: rgba(0, 0, 0, 0.45); padding: 0;
+}
+.cz-card {
+  background: var(--bg, #fff); min-height: 100%; max-width: 720px; margin: 0 auto;
+  display: flex; flex-direction: column;
+}
+@media (min-width: 760px) {
+  .cz-overlay { padding: 28px 16px; }
+  .cz-card { min-height: 0; border-radius: 16px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3); overflow: hidden; }
+}
+.cz-bar {
+  position: sticky; top: 0; z-index: 2; display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; padding: 10px 16px; background: var(--bg, #fff); border-bottom: 1px solid var(--line, #dcdcdc);
+}
+.cz-bartitle { font: 600 0.82rem/1 var(--font-body, system-ui); letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted, #6b6b6b); }
+.cz-doc { padding: 20px 16px 8px; }
+.cz-store { margin: 0; font: 600 0.78rem/1 var(--font-body, system-ui); letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted, #6b6b6b); }
+.cz-title { margin: 8px 0 2px; font: 700 2rem/1.1 var(--font-display, Georgia, serif); }
+.cz-date { margin: 0; font-weight: 600; }
+.cz-gen { margin: 2px 0 0; color: var(--muted, #6b6b6b); font-size: 0.82rem; }
+.cz-note { margin: 12px 0 0; padding: 10px 12px; border-radius: 10px; background: #fff5df; color: #6b4a00; font-size: 0.86rem; }
+.cz-big { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 18px 0 6px; }
+.cz-bigitem {
+  grid-column: 1 / -1; display: grid; gap: 4px; padding: 14px 16px;
+  border: 1px solid var(--line, #dcdcdc); border-radius: 12px; background: var(--tile, #f4f4f2);
+}
+.cz-bigitem.cz-small { grid-column: auto; background: transparent; }
+.cz-biglabel { font: 600 0.72rem/1 var(--font-body, system-ui); letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted, #6b6b6b); }
+.cz-bigval { font: 700 1.9rem/1.1 var(--font-body, system-ui); font-variant-numeric: tabular-nums; }
+.cz-small .cz-bigval { font-size: 1.4rem; }
+.cz-h { margin: 22px 0 6px; font: 700 1.25rem/1.2 var(--font-display, Georgia, serif); }
+.cz-rows { border-top: 1px solid var(--line, #dcdcdc); }
+.cz-row { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--line, #dcdcdc); }
+.cz-l { display: grid; gap: 2px; min-width: 0; }
+.cz-name { font-weight: 600; overflow-wrap: anywhere; }
+.cz-sub { color: var(--muted, #6b6b6b); font-size: 0.84rem; overflow-wrap: anywhere; }
+.cz-amt { font-weight: 600; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.cz-total { border-bottom: 0; font-size: 1.05rem; }
+.cz-total .cz-name, .cz-total .cz-amt { font-weight: 700; }
+.cz-void .cz-name, .cz-void .cz-amt { text-decoration: line-through; color: var(--muted, #6b6b6b); font-weight: 500; }
+.cz-empty { color: var(--muted, #6b6b6b); }
+.cz-tag { display: inline-block; margin-left: 8px; padding: 2px 8px; border-radius: 999px; background: var(--tile, #eee); font-size: 0.72rem; font-weight: 600; }
+.cz-tag.cz-warn { background: #fff0d6; color: #8a5a00; }
+.cz-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 16px 16px calc(24px + env(safe-area-inset-bottom, 0px)); margin-top: auto; }
+.cz-actions .btn { text-decoration: none; text-align: center; min-height: 48px; }
+.cz-actions .btn-primary { grid-column: 1 / -1; }
+@media (max-width: 360px) { .cz-actions { grid-template-columns: 1fr; } }
+
+/* devoluciones, cuadre de caja */
+.cz-dochold { display: block; }
+.cz-bigsub { color: var(--muted, #6b6b6b); font-size: 0.84rem; }
+.cz-ret .cz-amt { color: var(--bad, #b3261e); }
+.cz-count { margin-bottom: 10px; }
+.cz-counthead { margin: 10px 0 4px; font-weight: 600; font-size: 0.9rem; }
+.cz-ok .cz-amt { color: var(--ok, #2c6b4e); }
+.cz-diff .cz-amt { color: var(--bad, #b3261e); }
+.cz-hint { margin: 0 0 12px; color: var(--muted, #6b6b6b); font-size: 0.84rem; line-height: 1.45; }
+.cz-cuadre { padding: 4px 16px 8px; border-top: 1px solid var(--line, #dcdcdc); margin-top: 16px; }
+.cz-cuadre .cz-h { margin-top: 18px; }
+.cz-cq-rows { display: grid; gap: 10px; margin-bottom: 12px; }
+.cz-cq { display: grid; gap: 4px; padding: 12px; border: 1px solid var(--line, #dcdcdc); border-radius: 12px; }
+.cz-cq-name { font-weight: 600; }
+.cz-cq-exp { font-size: 0.84rem; }
+.cz-cq-line { display: flex; align-items: center; gap: 8px; }
+.cz-cq-line input { flex: 1; min-width: 0; min-height: 46px; padding: 0 12px; border: 1px solid var(--line, #dcdcdc); border-radius: 10px; font: inherit; font-size: 1rem; background: var(--bg, #fff); color: inherit; }
+.cz-cq-line input:focus { outline: 2px solid var(--accent, #3f5f7a); outline-offset: 1px; }
+.cz-cq-unit { min-width: 2.6em; font-size: 0.9rem; }
+.cz-cq-diff { min-height: 1.3em; font-size: 0.88rem; font-weight: 600; }
+.cz-cq-diff.ok { color: var(--ok, #2c6b4e); }
+.cz-cq-diff.warn { color: var(--warn, #8a5300); }
+.cz-cq-diff.bad { color: var(--bad, #b3261e); }
+.cz-cuadre > div > input[type=text] { width: 100%; min-height: 46px; padding: 0 12px; margin-bottom: 10px; border: 1px solid var(--line, #dcdcdc); border-radius: 10px; font: inherit; background: var(--bg, #fff); color: inherit; }
+.cz-cuadre .btn-primary { width: 100%; min-height: 48px; }
+.cz-saved { padding: 12px 14px; border-radius: 12px; background: var(--ok-bg, #e6f2ec); margin-bottom: 8px; }
+.cz-saved-title { margin: 0 0 6px; font-weight: 700; color: var(--ok, #2c6b4e); }
+.cz-saved-line { margin: 2px 0; font-weight: 600; font-size: 0.92rem; }
+.cz-saved-line.warn { color: var(--warn, #8a5300); }
+.cz-saved-line.ok { color: var(--ok, #2c6b4e); }
+
+@media print {
+  body.cz-open > *:not(.cz-overlay) { display: none !important; }
+  body.cz-open { background: #fff !important; overflow: visible !important; }
+  .cz-overlay { position: static !important; overflow: visible !important; background: none !important; padding: 0 !important; }
+  .cz-card { box-shadow: none !important; border-radius: 0 !important; max-width: none !important; }
+  .no-print { display: none !important; }
+  .cz-doc { padding: 0 !important; }
+  .cz-bigitem { background: none !important; }
+}

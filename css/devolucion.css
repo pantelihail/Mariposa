@@ -1,0 +1,15 @@
+/* Devolver o cambiar productos de una venta */
+.dv-lines { display: grid; gap: 8px; margin: 12px 0 8px; }
+.dv-line { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 12px; border: 1px solid var(--line, #dcdcdc); border-radius: 12px; }
+.dv-info { min-width: 0; }
+.dv-name { font-weight: 600; overflow-wrap: anywhere; }
+.dv-sub { font-size: 0.82rem; }
+.dv-step { display: flex; align-items: center; gap: 6px; flex: none; }
+.dv-qty { min-width: 2ch; text-align: center; font-weight: 700; font-size: 1.1rem; }
+.dv-step .icon-btn { width: 44px; height: 44px; font-size: 1.3rem; }
+.dv-step .icon-btn:disabled { opacity: 0.35; }
+.dv-sum { margin: 4px 0 14px; font-weight: 600; }
+.dv-modes { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; }
+.dv-mode { min-height: 48px; line-height: 1.2; }
+.dv-mode[aria-pressed="true"] { background: var(--accent, #3f5f7a); border-color: var(--accent, #3f5f7a); color: var(--accent-ink, #fff); }
+@media (max-width: 380px) { .dv-modes { grid-template-columns: 1fr; } }
