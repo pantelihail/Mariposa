@@ -11,7 +11,7 @@
    podría borrar toda tu base de datos. Esta página es pública.
    ===================================================================== */
 window.MARIPOSA_CONFIG = {
-  supabaseUrl: 'https://TU-PROYECTO.supabase.co',
-  supabaseAnonKey: 'TU_LLAVE_PUBLICA',
+  supabaseUrl: 'https://zcamqgcjgwulpmlpgtue.supabase.co',
+  supabaseAnonKey: 'sb_publishable_to2mpbEHBwQ5_ll2UPytjQ_2GvhzveN',
   demo: false
 };
